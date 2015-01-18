@@ -10,6 +10,7 @@ int mkf_read_chunk(uint8_t *buffer, uint32_t size, uint32_t chunkId, FILE *fp);
 int mkf_decompress_chunk(uint8_t *buffer, uint32_t size, uint32_t chunkId, FILE *fp);
 
 int fbp_blit_to_surface(uint8_t* fbp, SDL_Surface *surface);
+int rle_blit_to_surface(const uint8_t *bitmap, SDL_Surface *surface, int dx, int dy);
 
 
 #endif /* end of include guard: __DRIVER_H__ */

@@ -3,6 +3,7 @@
 #include "ScreenManager.h"
 #include "ResourceManager.h"
 #include "TextManager.h"
+#include "MapManager.h"
 
 #include "State/StateMachine.h"
 #include "State/OpeningMenuState.h"
@@ -15,6 +16,7 @@ void Game::init() {
   m_running = true;
   TheResourceManager::Instance()->init();
   TheTextManager::Instance()->init();
+  TheMapManager::Instance()->init();
   TheStateMachine::Instance()->push(new OpeningMenuState());
 }
 void Game::handleEvent() {
