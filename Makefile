@@ -1,5 +1,5 @@
 CC=g++
-CFLAGS = -g -Wall `sdl2-config --cflags`
+CFLAGS = -g -Wall `sdl2-config --cflags` --std=c++11
 INCLUDES = -I/. -I/usr/local/include
 LFLAGS =
 LIBS = `sdl2-config --libs`
@@ -17,8 +17,9 @@ LIBS = `sdl2-config --libs`
 # SRCS += $(STATE_SRC) $(OBJECT_SRC) $(MAP_SRC)
 SRCS = $(wildcard *.cpp)
 STATE_SRCS = $(wildcard State/*.cpp)
+OBJECT_SRCS = $(wildcard Object/*.cpp)
 
-SRCS += $(STATE_SRCS)
+SRCS += $(STATE_SRCS) $(OBJECT_SRCS)
 OBJS = $(SRCS:.cpp=.o)
 MAIN = hebipal
 

@@ -25,6 +25,7 @@ void Game::update() {
 }
 void Game::render() {
   TheStateMachine::Instance()->render();
+  TheScreenManager::Instance()->render();
 }
 void Game::quit() {
   TheScreenManager::Instance()->clean();

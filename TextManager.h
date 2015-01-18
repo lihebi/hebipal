@@ -5,10 +5,11 @@
 
 #define WORD_LENGTH 10
 
-#define MENUITEM_COLOR 0x4f
-#define MENUITEM_COLOR_INACTIVE 0x1c
+
+#define DESCTEXT_COLOR 0x2e
 
 #define MAINMENU_LABEL_NEWGAME 7
+#define MAINMENU_LABEL_LOADGAME 8
 
 class TextManager {
 public:
@@ -35,6 +36,10 @@ private:
   uint8_t *m_wordBuf;
   uint8_t *m_msgBuf;
   uint32_t *m_msgOffset;
+
+  uint16_t *m_bufChar;
+  uint8_t *m_bufGlyph;
+  int m_nChar;
 };
 
 typedef TextManager TheTextManager;

@@ -4,12 +4,13 @@
 #include "driver.h"
 #include "ascii.h"
 // #include "big5font.h"
-#include "gbfont.h"
+// #include "gbfont.h"
 #include <iostream>
 #include <cstdio>
 TextManager *TextManager::m_instance = 0;
 
 void TextManager::init() {
+
   // open files
   FILE *fpMsg = fopen("data/M.MSG", "rb");
   FILE *fpWord = fopen("data/WORD.DAT", "rb");
@@ -34,6 +35,23 @@ void TextManager::init() {
   fseek(fpMsg, 0, SEEK_SET);
   fread(m_msgBuf, 1, i, fpMsg);
   fclose(fpMsg);
+  // fonts
+  FILE *fp;
+  fp = fopen("data/wor16.asc", "rb");
+  fseek(fp, 0, SEEK_END);
+  m_nChar = ftell(fp);
+  m_nChar /= 2;
+
+  m_bufChar = (uint16_t*)calloc(m_nChar, sizeof(uint16_t));
+  fseek(fp, 0, SEEK_SET);
+  fread(m_bufChar, sizeof(uint16_t), m_nChar, fp);
+  fclose(fp);
+
+  fp = fopen("data/wor16.fon", "rb");
+  m_bufGlyph = (uint8_t*)calloc(m_nChar, 30);
+  fseek(fp, 0x682, SEEK_SET);
+  fread(m_bufGlyph, 30, m_nChar, fp);
+  fclose(fp);
 }
 void trim(char *str) {
   int pos=0;
@@ -51,11 +69,10 @@ void trim(char *str) {
   }
 }
 const char* TextManager::getWord(uint16_t wordId) {
-  // char buf[WORD_LENGTH +1];
-  // char *buf = (char*)malloc(WORD_LENGTH+1);
   static char buf[WORD_LENGTH+1];
   memcpy(buf, &m_wordBuf[wordId*WORD_LENGTH], WORD_LENGTH);
   buf[WORD_LENGTH] = '\0';
+
   trim(buf);
   if ((strlen(buf) & 1) != 0 && buf[strlen(buf)-1] == '1') {
     buf[strlen(buf)-1] = '\0';
@@ -66,7 +83,7 @@ void TextManager::drawText(const char *s, int x, int y, uint8_t color) {
   while(*s) {
     if (*s & 0x80) {
       // chinese
-      uint16_t wchar = ((uint8_t*)s)[0] | ((uint8_t*)s)[1] << 8;
+      uint16_t wchar = ((uint8_t*)s)[0] | (((uint8_t*)s)[1] << 8);
       drawChinese(wchar, TheScreenManager::Instance()->getScreen(), x, y, color);
       s += 2;
       x += 16;
@@ -79,35 +96,28 @@ void TextManager::drawText(const char *s, int x, int y, uint8_t color) {
 }
 void TextManager::drawTextById(uint16_t wordId, int x, int y, uint8_t color) {
   drawText(getWord(wordId), x, y, color);
-  printf("%x\n", getWord(7));
 }
 void TextManager::drawChinese(uint16_t wchar, SDL_Surface *screen, int x, int y, uint8_t color) {
-  std::cout<<"drawing chinese"<<wchar<<std::endl;
-  int dx;
   uint8_t *p;
-  uint8_t ch1,ch2;
-  ch1 = wchar & 0xff;
-  ch2 = wchar >> 8;
-  // p = &big5font[((ch1 - 0xa1) * 157 + ch2 - 0x40) << 5] + 8;
-  // p = &big5font[((ch1 - 0xa1) * 157 +63 + ch2 - 0xa1) << 5] + 8;
-  p = &gbfont[((ch1 -0xa1) *94 + (ch2 - 0xa1) ) *32];
+  int i, dx;
+  for (i=0;i<m_nChar;i++) {
+    if (m_bufChar[i] == wchar) {
+      break;
+    }
+  }
+  if (i>m_nChar) return;
+  p = m_bufGlyph + i * 30;
+
   y *= screen->pitch;
-  for (int i=0;i<32;i++) {
+  for (int i=0;i<30;i++) {
     dx = x + ((i & 1) << 3);
     for (int j=0;j<8;j++) {
-      if (p[i] & (1 << (7-j))) {
-        if (dx<screen->w) {
-          ((char*)(screen->pixels))[y+dx] = color;
-        } else {
-          break;
-        }
+      if (p[i] & (1 << (7 - j))) {
+        ((uint8_t*)(screen->pixels))[y+dx] = color;
       }
       dx++;
     }
-    y += (i & 1) * screen->pitch;
-    if (y / screen->pitch >= screen->h) {
-      break;
-    }
+    y += (i&1) * screen->pitch;
   }
 }
 void TextManager::drawAscii(uint8_t c, SDL_Surface *screen, int x, int y, uint8_t color) {
