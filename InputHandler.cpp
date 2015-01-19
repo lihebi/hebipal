@@ -29,6 +29,7 @@ bool InputHandler::isKeyDown(SDL_Scancode key) const {
 }
 
 InputHandler *InputHandler::m_instance = 0;
+
 void InputHandler::update() {
   SDL_Event event;
   while(SDL_PollEvent(&event)) {

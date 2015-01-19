@@ -21,6 +21,7 @@ public:
   }
   void init();
   const char* getWord(uint16_t wordId);
+  const char* getMsg(uint16_t msgId);
   void drawText(const char* s, int x, int y, uint8_t color);
   void drawTextById(uint16_t wordId, int x, int y, uint8_t color);
   void drawChinese(uint16_t wchar, SDL_Surface *screen, int x, int y, uint8_t color);

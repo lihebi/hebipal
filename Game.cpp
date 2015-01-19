@@ -4,20 +4,31 @@
 #include "ResourceManager.h"
 #include "TextManager.h"
 #include "MapManager.h"
+#include "SceneManager.h"
+#include "ScriptManager.h"
 
 #include "State/StateMachine.h"
 #include "State/OpeningMenuState.h"
+
+#include <iostream>
 
 Game *Game::m_instance = 0;
 
 void Game::init() {
   SDL_Init(SDL_INIT_EVERYTHING);
+  // create window and renderer
   TheScreenManager::Instance()->init(m_window, m_renderer);
   m_running = true;
+  // open files
   TheResourceManager::Instance()->init();
+  // load font and msg file
   TheTextManager::Instance()->init();
-  TheMapManager::Instance()->init();
+  // push statemachine
   TheStateMachine::Instance()->push(new OpeningMenuState());
+  // load scenes from file
+  TheSceneManager::Instance()->init();
+  // load scripts and event objects
+  TheScriptManager::Instance()->init();
 }
 void Game::handleEvent() {
   TheInputHandler::Instance()->update();
@@ -31,8 +42,6 @@ void Game::render() {
 }
 void Game::quit() {
   TheScreenManager::Instance()->clean();
-  // SDL_DestroyWindow(m_window);
-  // SDL_DestroyRenderer(m_renderer);
   SDL_Quit();
   m_running = false;
 }

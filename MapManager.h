@@ -8,12 +8,6 @@ typedef struct tagMap {
   uint8_t *sprites;
   int mapId;
 } Map;
-typedef struct tagScene {
-  uint16_t mapId;
-  uint16_t scriptOnEnter;
-  uint16_t scriptOnTeleport;
-  uint16_t eventObjectIndex;
-} Scene;
 
 class MapManager {
 public:
@@ -24,18 +18,23 @@ public:
     return m_instance;
   }
   void init();
-  void load();
+  void load(int mapId);
 
-  Map* getMap() {
-    return m_map;
-  }
+  Map* getMap() { return m_map; }
   void draw(uint8_t layer);
+  void setViewport(int x, int y);
+  void getViewport(int *x, int *y);
 private:
   static MapManager *m_instance;
 
+  MapManager();
+  ~MapManager();
+
   Map *m_map;
-  Scene m_scene[300];
-  uint16_t m_sceneId;
+  int m_mapId;
+
+  int m_viewportX;
+  int m_viewportY;
 };
 
 typedef MapManager TheMapManager;

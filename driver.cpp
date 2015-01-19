@@ -119,3 +119,43 @@ int rle_blit_to_surface(const uint8_t *bitmap, SDL_Surface *surface, int dx, int
   end:
   return 0;
 }
+
+uint rle_get_width(const uint8_t *bitmap) {
+  // Skip the 0x00000002 in the file header.
+  if (bitmap[0] == 0x02 && bitmap[1] == 0x00 &&
+    bitmap[2] == 0x00 && bitmap[3] == 0x00)
+  {
+    bitmap += 4;
+  }
+  // Get the width and height of the bitmap.
+  return bitmap[0] | (bitmap[1] << 8);
+}
+
+uint rle_get_height(const uint8_t *bitmap) {
+  // Skip the 0x00000002 in the file header.
+  if (bitmap[0] == 0x02 && bitmap[1] == 0x00 &&
+    bitmap[2] == 0x00 && bitmap[3] == 0x00)
+  {
+    bitmap += 4;
+  }
+  // Get the width and height of the bitmap.
+  return bitmap[2] | (bitmap[3] << 8);
+}
+
+SDL_Color *get_palette(int paletteId) {
+  // TODO duplicate
+  static SDL_Color palette[256];
+  uint8_t buf[1536];
+  int i;
+  FILE *fp;
+
+  fp = fopen("data/PAT.MKF", "rb");
+  i = mkf_read_chunk(buf, 1536, paletteId, fp);
+  fclose(fp);
+  for (i=0;i<256;i++) {
+    palette[i].r = buf[i * 3] << 2;
+    palette[i].g = buf[i * 3 + 1] << 2;
+    palette[i].b = buf[i * 3 + 2] << 2;
+  }
+  return palette;
+}

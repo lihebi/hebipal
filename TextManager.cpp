@@ -3,8 +3,6 @@
 #include "ScreenManager.h"
 #include "driver.h"
 #include "ascii.h"
-// #include "big5font.h"
-// #include "gbfont.h"
 #include <iostream>
 #include <cstdio>
 TextManager *TextManager::m_instance = 0;
@@ -79,6 +77,20 @@ const char* TextManager::getWord(uint16_t wordId) {
   }
   return buf;
 }
+const char* TextManager::getMsg(uint16_t msgId) {
+  static char buf[256];
+  uint32_t offset,size;
+  if (msgId > m_nMsg) {
+    return NULL;
+  }
+  offset = m_msgOffset[msgId];
+  size = m_msgOffset[msgId + 1] - offset;
+  // assert(size < 255);
+  memcpy(buf, &m_msgBuf[offset], size);
+  buf[size] = '\0';
+  return buf;
+}
+
 void TextManager::drawText(const char *s, int x, int y, uint8_t color) {
   while(*s) {
     if (*s & 0x80) {
@@ -93,11 +105,14 @@ void TextManager::drawText(const char *s, int x, int y, uint8_t color) {
       x += 8;
     }
   }
+  // render screen after each character display
+  TheScreenManager::Instance()->render();
 }
 void TextManager::drawTextById(uint16_t wordId, int x, int y, uint8_t color) {
   drawText(getWord(wordId), x, y, color);
 }
 void TextManager::drawChinese(uint16_t wchar, SDL_Surface *screen, int x, int y, uint8_t color) {
+  printf("chiense: %x\n", wchar);
   uint8_t *p;
   int i, dx;
   for (i=0;i<m_nChar;i++) {

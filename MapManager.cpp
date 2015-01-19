@@ -5,6 +5,7 @@
 #include <iostream>
 
 MapManager *MapManager::m_instance = 0;
+
 Map *load_map(int mapId, FILE *fpMAP, FILE *fpGOP) {
   uint8_t *buf;
   int size;
@@ -22,17 +23,29 @@ Map *load_map(int mapId, FILE *fpMAP, FILE *fpGOP) {
   map->mapId = mapId;
   return map;
 }
+MapManager::MapManager() : m_map(NULL), m_mapId(0) {}
 void MapManager::init() {
-  mkf_read_chunk((uint8_t*)(m_scene), sizeof(m_scene), 1, TheResourceManager::Instance()->fpSSS);
-  m_sceneId = 1;
+}
+void MapManager::setViewport(int x, int y) {
+  m_viewportX = x;
+  m_viewportY = y;
+}
+void MapManager::getViewport(int *x, int *y) {
+  *x = m_viewportX;
+  *y = m_viewportY;
+}
+// load map. If current map is the map, just return.
+void MapManager::load(int mapId) {
+  if (m_mapId == mapId) return;
+  if (m_map && m_map->sprites) free(m_map->sprites);
+  free(m_map);
   FILE *fpMAP = fopen("data/MAP.MKF", "rb");
   FILE *fpGOP = fopen("data/GOP.MKF", "rb");
-  int i = m_sceneId - 1;
-  m_map = load_map(m_scene[i].mapId, fpMAP, fpGOP);
+  m_map = load_map(mapId, fpMAP, fpGOP);
+  m_mapId = m_map->mapId;
   fclose(fpMAP);
   fclose(fpGOP);
 }
-void MapManager::load() {}
 uint8_t* sprite_get_frame(uint8_t *sprite, int frameId) {
   int imagecount, offset;
   imagecount = (sprite[0] | (sprite[1] << 8));
@@ -58,6 +71,9 @@ void MapManager::draw(uint8_t layer) {
   int x,y,h,sx,sy,dx,dy,xPos,yPos;
   const uint8_t *bitmap = NULL;
   SDL_Rect rect = {0, 0, 320, 200};
+  // rect.x = m_viewportX;
+  // rect.y = m_viewportY;
+
   int tmp = 11535488;
   rect.x = tmp & 0xffff;
   rect.y = tmp >> 16;
