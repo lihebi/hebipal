@@ -25,15 +25,9 @@ public:
     }
     return m_instance;
   }
-
-  void update();
-  void render();
-
   void start(uint8_t location, uint8_t color, int charId);
   void showText(const char *text);
   void clear();
-  void wait();
-  bool isReady();
 
 private:
 
@@ -59,8 +53,6 @@ private:
 
   // FIXME globals
   uint16_t m_paletteId;
-
-  bool m_ready;
 
   const char *m_text;
 };

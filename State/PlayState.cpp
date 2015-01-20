@@ -12,10 +12,6 @@ void PlayState::update() {
 
   // check entering script
   TheSceneManager::Instance()->update();
-  // run script
-  TheScriptManager::Instance()->update();
-  // check for enter
-  TheDialogManager::Instance()->update();
 }
 void PlayState::render() {
   // TheMapManager::Instance()->draw(0);

@@ -39,3 +39,12 @@ void InputHandler::update() {
     }
   }
 }
+void InputHandler::waitForReturn() {
+  while(true) {
+    update();
+    if (isKeyDown(SDL_SCANCODE_RETURN)) {
+      break;
+    }
+    SDL_Delay(50);
+  }
+}

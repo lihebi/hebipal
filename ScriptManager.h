@@ -37,8 +37,7 @@ public:
   void init();
   void update();
   void render();
-  void add(uint16_t scriptEntryId, uint16_t eventObjectId);
-  void run();
+  void run(uint16_t scriptEntryId, uint16_t eventObjectId);
 private:
   static ScriptManager *m_instance;
 
@@ -47,13 +46,6 @@ private:
 
   int m_nEventObjects;
   int m_nScriptEntries;
-
-  // bool m_wait;
-  // bool m_waitForDialog;
-  // int m_count;
-
-  std::stack<uint16_t> m_scriptStack;
-  std::stack<uint16_t> m_objectStack;
 };
 
 typedef ScriptManager TheScriptManager;

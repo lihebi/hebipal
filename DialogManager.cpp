@@ -10,22 +10,9 @@
 
 DialogManager *DialogManager::m_instance = 0;
 
-void DialogManager::update() {
-  if (!m_ready && TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
-    m_ready = true;
-    TheScreenManager::Instance()->update();
-  }
-}
 DialogManager::DialogManager() {
-  m_ready = true;
   m_color = FONT_COLOR_DEFAULT;
   m_text = NULL;
-}
-bool DialogManager::isReady() {
-  return m_ready;
-}
-void DialogManager::wait() {
-  m_ready = false;
 }
 
 void DialogManager::start(uint8_t location, uint8_t color, int charId) {
@@ -80,12 +67,7 @@ void DialogManager::start(uint8_t location, uint8_t color, int charId) {
   }
   m_location = location;
 }
-// void DialogManager::showText(const char *text) {
-//   m_text = text;
-//   std::cout<<"mingmingjiuf"<<std::endl;
-//   if (!m_text) std::cout<<"....."<<std::endl;
-// }
-void DialogManager::render() {}
+
 void DialogManager::showText(const char *text) {
   char tmp[3];
 

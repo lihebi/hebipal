@@ -16,7 +16,8 @@ int SceneManager::getCurrentMapId() {
 void SceneManager::update() {
   if (m_entering) {
     m_entering = false;
-    TheScriptManager::Instance()->add(m_scene[m_sceneId - 1].scriptOnEnter, 0xffff);
+    // TheScriptManager::Instance()->add(m_scene[m_sceneId - 1].scriptOnEnter, 0xffff);
+    TheScriptManager::Instance()->run(m_scene[m_sceneId - 1].scriptOnEnter, 0xffff);
   }
 }
 // replace current scene's scriptOnEntry. Maybe used for JuQing.
