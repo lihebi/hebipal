@@ -33,7 +33,7 @@ void OpeningMenuState::render() {
 void OpeningMenuState::onEnter() {
   std::cout<<"enter opening menu state"<<std::endl;
   drawBackground();
-  TheScreenManager::Instance()->palette();
+  // TheScreenManager::Instance()->palette();
   m_menu = new Menu();
   m_menu->addItem(new MenuItem(MAINMENU_LABEL_NEWGAME, 125, 95), true);
   m_menu->addItem(new MenuItem(MAINMENU_LABEL_LOADGAME, 125, 112));

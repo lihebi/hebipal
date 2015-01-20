@@ -3,6 +3,7 @@
 #include <cstdio>
 
 #include "driver.h"
+#include "MapManager.h"
 
 ScreenManager *ScreenManager::m_instance = 0;
 SDL_Window *ScreenManager::m_window = 0;
@@ -21,6 +22,8 @@ void ScreenManager::init(SDL_Window *window, SDL_Renderer *renderer) {
   SDL_TEXTUREACCESS_STREAMING, 320, 200);
 
   m_color = (SDL_Color*)malloc(256*sizeof(SDL_Color));
+
+  palette();
 }
 void ScreenManager::render() {
   bool locked = false;
@@ -40,6 +43,10 @@ void ScreenManager::render() {
   SDL_RenderClear(m_renderer);
   SDL_RenderCopy(m_renderer, m_texture, NULL, NULL);
   SDL_RenderPresent(m_renderer);
+}
+void ScreenManager::update() {
+  TheMapManager::Instance()->draw(0);
+  TheMapManager::Instance()->draw(1);
 }
 void ScreenManager::clean() {
   SDL_DestroyWindow(m_window);

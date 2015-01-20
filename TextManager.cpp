@@ -5,6 +5,7 @@
 #include "ascii.h"
 #include <iostream>
 #include <cstdio>
+#include <cassert>
 TextManager *TextManager::m_instance = 0;
 
 void TextManager::init() {
@@ -85,7 +86,7 @@ const char* TextManager::getMsg(uint16_t msgId) {
   }
   offset = m_msgOffset[msgId];
   size = m_msgOffset[msgId + 1] - offset;
-  // assert(size < 255);
+  assert(size < 255);
   memcpy(buf, &m_msgBuf[offset], size);
   buf[size] = '\0';
   return buf;
@@ -112,7 +113,6 @@ void TextManager::drawTextById(uint16_t wordId, int x, int y, uint8_t color) {
   drawText(getWord(wordId), x, y, color);
 }
 void TextManager::drawChinese(uint16_t wchar, SDL_Surface *screen, int x, int y, uint8_t color) {
-  printf("chiense: %x\n", wchar);
   uint8_t *p;
   int i, dx;
   for (i=0;i<m_nChar;i++) {

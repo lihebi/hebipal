@@ -11,8 +11,9 @@
 DialogManager *DialogManager::m_instance = 0;
 
 void DialogManager::update() {
-  if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
+  if (!m_ready && TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
     m_ready = true;
+    TheScreenManager::Instance()->update();
   }
 }
 DialogManager::DialogManager() {
@@ -86,15 +87,21 @@ void DialogManager::start(uint8_t location, uint8_t color, int charId) {
 // }
 void DialogManager::render() {}
 void DialogManager::showText(const char *text) {
-  // std::cout<<"to render"<<std::endl;
-  // if (!m_text) return;
-  // std::cout<<"true render"<<std::endl;
-  // const char *text = m_text;
-  SDL_Rect rect;
-  int x,y,len = strlen(text);
   char tmp[3];
-  x = m_textX;
-  y = m_textY + m_line * 18;
+
+  if (m_line>3) {
+    m_line = 0;
+    while(true) {
+      TheInputHandler::Instance()->update();
+      if (TheInputHandler::Instance()->isKeyDown(SDL_SCANCODE_RETURN)) {
+        break;
+      }
+      SDL_Delay(50);
+    }
+    TheScreenManager::Instance()->update();
+  }
+  int x = m_textX;
+  int y = m_textY + m_line * 18;
   while(text != NULL && *text != '\0') {
     switch (*text) {
       case '-':

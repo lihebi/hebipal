@@ -13,6 +13,8 @@ public:
   }
   void init(SDL_Window *window, SDL_Renderer *renderer);
   void render();
+  // redraw map and others
+  void update();
   void clean();
   void palette();
   SDL_Surface* getScreen() {

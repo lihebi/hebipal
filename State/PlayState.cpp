@@ -18,10 +18,8 @@ void PlayState::update() {
   TheDialogManager::Instance()->update();
 }
 void PlayState::render() {
-  if (!TheDialogManager::Instance()->isReady()) return;
-  std::cout<<"draw map"<<std::endl;
-  TheMapManager::Instance()->draw(0);
-  TheMapManager::Instance()->draw(1);
+  // TheMapManager::Instance()->draw(0);
+  // TheMapManager::Instance()->draw(1);
 }
 
 void PlayState::onEnter() {

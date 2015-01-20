@@ -101,6 +101,7 @@ void ScriptManager::run() {
       // SDL_BlitSurface();
       // update_screen();
       // m_waitForDialog = true;
+      std::cout<<"wait"<<std::endl;
       TheDialogManager::Instance()->wait();
       m_scriptStack.push(scriptEntryId+1);
       m_objectStack.push(eventObjectId);
@@ -126,7 +127,8 @@ void ScriptManager::run() {
       break;
     case 0x0009:
       // TODO wait for specified number of frames
-      scriptEntryId++;
+      m_scriptStack.push(scriptEntryId+1);
+      m_objectStack.push(eventObjectId);
       break;
     case 0x000a:
       // TODO go to specified address if player selected no
@@ -134,7 +136,6 @@ void ScriptManager::run() {
       break;
     case 0x003b:
       // show dialog in the middle part of the screen
-      TheDialogManager::Instance()->wait();
       TheDialogManager::Instance()->clear();
       TheDialogManager::Instance()->start(DIALOG_CENTER, (uint8_t)script->operand[0], 0);
       m_scriptStack.push(scriptEntryId+1);
@@ -142,15 +143,13 @@ void ScriptManager::run() {
       break;
     case 0x003c:
       // show dialog in the upper part of the screen
-      TheDialogManager::Instance()->wait();
       TheDialogManager::Instance()->clear();
       TheDialogManager::Instance()->start(DIALOG_UPPER, (uint8_t)script->operand[1], script->operand[0]);
       m_scriptStack.push(scriptEntryId+1);
       m_objectStack.push(eventObjectId);
       break;
     case 0x003d:
-      // TODO show dialog in the  lower part of the screen
-      TheDialogManager::Instance()->wait();
+      // show dialog in the  lower part of the screen
       TheDialogManager::Instance()->clear();
       TheDialogManager::Instance()->start(DIALOG_LOWER, (uint8_t)script->operand[1], script->operand[0]);
       m_scriptStack.push(scriptEntryId+1);
@@ -158,11 +157,14 @@ void ScriptManager::run() {
       break;
     case 0x003e:
       // TODO show text in a window at the center of the screen
-      scriptEntryId++;
+      m_scriptStack.push(scriptEntryId+1);
+      m_objectStack.push(eventObjectId);
       break;
     case 0x008e:
       // TODO restore the screen
-      scriptEntryId++;
+      TheScreenManager::Instance()->update();
+      m_scriptStack.push(scriptEntryId+1);
+      m_objectStack.push(eventObjectId);
       break;
     case 0xffff:
       // print dialog text

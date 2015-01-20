@@ -48,9 +48,6 @@ private:
   int m_nEventObjects;
   int m_nScriptEntries;
 
-  uint16_t m_scriptEntryId;
-  uint16_t m_eventObjectId;
-
   // bool m_wait;
   // bool m_waitForDialog;
   // int m_count;
